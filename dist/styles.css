@@ -1,0 +1,499 @@
+:root {
+  color-scheme: dark;
+  --bg: #071016;
+  --panel: rgba(8, 20, 27, 0.82);
+  --panel-strong: rgba(8, 20, 27, 0.94);
+  --line: rgba(184, 226, 240, 0.18);
+  --line-strong: rgba(184, 226, 240, 0.32);
+  --text: #f4fbfd;
+  --muted: #91a8b2;
+  --accent: #56e7ff;
+  --accent-strong: #a0f3ff;
+  --x: #ff6f83;
+  --y: #a6ed61;
+  --z: #72a7ff;
+  --danger: #ff8b91;
+  font-family: Inter, ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+}
+
+* {
+  box-sizing: border-box;
+}
+
+html,
+body {
+  min-height: 100%;
+  margin: 0;
+}
+
+body {
+  min-width: 320px;
+  background:
+    radial-gradient(circle at 50% 15%, rgba(39, 131, 151, 0.18), transparent 34rem),
+    linear-gradient(160deg, #0a1820 0%, var(--bg) 58%);
+  color: var(--text);
+  overflow-x: hidden;
+}
+
+button {
+  font: inherit;
+}
+
+button:focus-visible {
+  outline: 3px solid var(--accent-strong);
+  outline-offset: 3px;
+}
+
+#xr-canvas {
+  position: fixed;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  pointer-events: none;
+}
+
+.app-shell {
+  position: relative;
+  z-index: 1;
+  display: grid;
+  grid-template-rows: auto 1fr auto;
+  width: min(100%, 38rem);
+  min-height: 100svh;
+  margin: 0 auto;
+  padding:
+    max(1rem, env(safe-area-inset-top))
+    max(1rem, env(safe-area-inset-right))
+    max(1rem, env(safe-area-inset-bottom))
+    max(1rem, env(safe-area-inset-left));
+}
+
+.topbar,
+.panel-heading,
+.brand,
+.status-badge,
+.measurement-controls {
+  display: flex;
+  align-items: center;
+}
+
+.topbar {
+  justify-content: space-between;
+  min-height: 4.25rem;
+}
+
+.brand {
+  gap: 0.8rem;
+}
+
+.brand-mark {
+  position: relative;
+  width: 2.75rem;
+  height: 2.75rem;
+  border: 1px solid var(--line-strong);
+  border-radius: 0.8rem;
+  background: rgba(9, 28, 37, 0.74);
+  box-shadow: inset 0 0 1.4rem rgba(86, 231, 255, 0.1);
+}
+
+.brand-mark::before,
+.brand-mark::after,
+.brand-mark span::before,
+.brand-mark span::after {
+  position: absolute;
+  width: 0.58rem;
+  height: 0.58rem;
+  border-color: var(--accent);
+  border-style: solid;
+  content: "";
+}
+
+.brand-mark::before {
+  inset: 0.48rem auto auto 0.48rem;
+  border-width: 2px 0 0 2px;
+}
+
+.brand-mark::after {
+  inset: 0.48rem 0.48rem auto auto;
+  border-width: 2px 2px 0 0;
+}
+
+.brand-mark span::before {
+  inset: auto auto 0.48rem 0.48rem;
+  border-width: 0 0 2px 2px;
+}
+
+.brand-mark span::after {
+  inset: auto 0.48rem 0.48rem auto;
+  border-width: 0 2px 2px 0;
+}
+
+.eyebrow {
+  margin: 0 0 0.2rem;
+  color: var(--accent);
+  font-size: 0.72rem;
+  font-weight: 750;
+  letter-spacing: 0.16em;
+}
+
+h1 {
+  margin: 0;
+  font-size: 1.12rem;
+  font-weight: 650;
+  letter-spacing: -0.02em;
+}
+
+.icon-button {
+  display: grid;
+  width: 2.75rem;
+  height: 2.75rem;
+  padding: 0;
+  place-items: center;
+  border: 1px solid var(--line);
+  border-radius: 50%;
+  background: var(--panel);
+  color: var(--text);
+}
+
+.icon-button svg {
+  width: 1.25rem;
+  fill: none;
+  stroke: currentColor;
+  stroke-linecap: round;
+  stroke-width: 1.75;
+}
+
+.measure-panel {
+  align-self: center;
+  width: 100%;
+  padding: clamp(1.15rem, 4vw, 1.7rem);
+  border: 1px solid var(--line);
+  border-radius: 1.65rem;
+  background: var(--panel);
+  box-shadow: 0 1.6rem 5rem rgba(0, 0, 0, 0.3), inset 0 1px rgba(255, 255, 255, 0.05);
+  backdrop-filter: blur(18px) saturate(125%);
+  -webkit-backdrop-filter: blur(18px) saturate(125%);
+}
+
+.panel-heading {
+  justify-content: space-between;
+  gap: 1rem;
+}
+
+.status-text {
+  margin: 0;
+  color: var(--muted);
+  font-size: 0.95rem;
+}
+
+.status-badge {
+  flex: 0 0 auto;
+  gap: 0.45rem;
+  padding: 0.55rem 0.68rem;
+  border: 1px solid var(--line);
+  border-radius: 999px;
+  color: var(--muted);
+  font-size: 0.7rem;
+  font-weight: 750;
+  letter-spacing: 0.09em;
+}
+
+.status-dot {
+  width: 0.48rem;
+  height: 0.48rem;
+  border-radius: 50%;
+  background: currentColor;
+}
+
+.status-badge.is-active {
+  color: var(--accent);
+}
+
+.status-badge.is-active .status-dot {
+  box-shadow: 0 0 0 0.3rem rgba(86, 231, 255, 0.14), 0 0 1rem var(--accent);
+  animation: pulse 1.8s ease-in-out infinite;
+}
+
+.total-readout {
+  margin: clamp(1.9rem, 7vw, 3.25rem) 0 clamp(1.5rem, 5vw, 2.4rem);
+  text-align: center;
+}
+
+.readout-label {
+  display: block;
+  margin-bottom: 0.35rem;
+  color: var(--muted);
+  font-size: 0.72rem;
+  font-weight: 750;
+  letter-spacing: 0.16em;
+}
+
+.total-readout div {
+  display: flex;
+  align-items: baseline;
+  justify-content: center;
+  gap: 0.5rem;
+}
+
+#distance-total {
+  font-variant-numeric: tabular-nums;
+  font-size: clamp(3.5rem, 18vw, 6.5rem);
+  font-weight: 250;
+  line-height: 0.95;
+  letter-spacing: -0.075em;
+  text-shadow: 0 0 2.5rem rgba(86, 231, 255, 0.18);
+}
+
+.unit {
+  color: var(--accent);
+  font-size: 1.35rem;
+  font-weight: 650;
+}
+
+.axis-grid {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: 0.65rem;
+}
+
+.axis-card {
+  display: grid;
+  grid-template-columns: auto 1fr auto;
+  align-items: baseline;
+  min-width: 0;
+  padding: 0.85rem 0.72rem;
+  border: 1px solid var(--line);
+  border-radius: 0.95rem;
+  background: rgba(190, 235, 248, 0.045);
+}
+
+.axis-label {
+  align-self: center;
+  width: 1.35rem;
+  height: 1.35rem;
+  margin-right: 0.35rem;
+  border-radius: 0.36rem;
+  color: #071016;
+  font-size: 0.73rem;
+  font-weight: 850;
+  line-height: 1.35rem;
+  text-align: center;
+}
+
+.axis-x .axis-label {
+  background: var(--x);
+}
+
+.axis-y .axis-label {
+  background: var(--y);
+}
+
+.axis-z .axis-label {
+  background: var(--z);
+}
+
+.axis-card strong {
+  overflow: hidden;
+  font-size: clamp(1rem, 4.5vw, 1.45rem);
+  font-variant-numeric: tabular-nums;
+  font-weight: 520;
+  letter-spacing: -0.035em;
+  text-overflow: clip;
+}
+
+.axis-unit {
+  margin-left: 0.18rem;
+  color: var(--muted);
+  font-size: 0.72rem;
+}
+
+.controls {
+  margin-top: 1.5rem;
+}
+
+.primary-button,
+.secondary-button {
+  min-height: 3.65rem;
+  border-radius: 1rem;
+  font-size: 1rem;
+  font-weight: 720;
+  cursor: pointer;
+  touch-action: manipulation;
+}
+
+.primary-button {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 100%;
+  gap: 0.7rem;
+  border: 1px solid rgba(160, 243, 255, 0.68);
+  background: linear-gradient(135deg, #a4f4ff, #52d8ee);
+  color: #062029;
+  box-shadow: 0 0.9rem 2.4rem rgba(50, 203, 225, 0.18);
+}
+
+.primary-button svg {
+  width: 1.3rem;
+  fill: none;
+  stroke: currentColor;
+  stroke-linecap: round;
+  stroke-linejoin: round;
+  stroke-width: 1.75;
+}
+
+.secondary-button {
+  flex: 0 0 38%;
+  border: 1px solid var(--line-strong);
+  background: rgba(229, 248, 252, 0.06);
+  color: var(--text);
+}
+
+.primary-button:disabled,
+.secondary-button:disabled {
+  cursor: not-allowed;
+  filter: saturate(0.25);
+  opacity: 0.45;
+}
+
+.measurement-controls {
+  gap: 0.7rem;
+}
+
+.measurement-controls .primary-button {
+  flex: 1 1 auto;
+}
+
+.button-dot,
+.button-square {
+  width: 0.72rem;
+  height: 0.72rem;
+  background: currentColor;
+}
+
+.button-dot {
+  border-radius: 50%;
+}
+
+.button-square {
+  display: inline-block;
+  margin-right: 0.45rem;
+  border-radius: 0.12rem;
+}
+
+.support-message {
+  margin: 1rem 0 0;
+  color: var(--muted);
+  font-size: 0.82rem;
+  line-height: 1.45;
+  text-align: center;
+}
+
+.support-message.is-error {
+  color: var(--danger);
+}
+
+.help-text {
+  padding: 1.4rem 0 0.25rem;
+  color: var(--muted);
+  font-size: 0.8rem;
+  line-height: 1.45;
+  text-align: center;
+}
+
+.help-text p {
+  margin: 0.2rem 0;
+}
+
+.is-hidden {
+  display: none !important;
+}
+
+body.xr-active {
+  background: transparent;
+}
+
+body.xr-active .app-shell {
+  pointer-events: none;
+}
+
+body.xr-active .topbar,
+body.xr-active .measure-panel {
+  pointer-events: auto;
+}
+
+body.xr-active .measure-panel {
+  align-self: end;
+  margin-bottom: 0.4rem;
+  padding: 1rem;
+  border-radius: 1.25rem;
+  background: rgba(5, 17, 23, 0.69);
+}
+
+body.xr-active .topbar {
+  min-height: 3rem;
+}
+
+body.xr-active .brand-mark,
+body.xr-active .brand .eyebrow,
+body.xr-active .help-text,
+body.xr-active .support-message,
+body.xr-active .panel-heading .eyebrow {
+  display: none;
+}
+
+body.xr-active .total-readout {
+  margin: 0.65rem 0 1rem;
+}
+
+body.xr-active #distance-total {
+  font-size: clamp(3rem, 15vw, 5rem);
+}
+
+@keyframes pulse {
+  0%,
+  100% {
+    opacity: 0.55;
+  }
+  50% {
+    opacity: 1;
+  }
+}
+
+@media (max-height: 650px) {
+  .app-shell {
+    grid-template-rows: auto auto auto;
+  }
+
+  .measure-panel {
+    margin-top: 0.75rem;
+  }
+
+  .total-readout {
+    margin: 1.25rem 0;
+  }
+
+  .help-text {
+    padding-top: 0.8rem;
+  }
+}
+
+@media (max-width: 370px) {
+  .app-shell {
+    padding-inline: 0.7rem;
+  }
+
+  .axis-card {
+    grid-template-columns: auto 1fr;
+    padding: 0.75rem 0.55rem;
+  }
+
+  .axis-unit {
+    display: none;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .status-badge.is-active .status-dot {
+    animation: none;
+  }
+}

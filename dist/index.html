@@ -1,0 +1,105 @@
+<!doctype html>
+<html lang="de">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
+    <meta name="theme-color" content="#081117" />
+    <meta
+      name="description"
+      content="Eine einfache WebXR-Anwendung zum Messen von Abständen im lokalen AR-Koordinatensystem."
+    />
+    <title>XR Distanzmesser</title>
+    <link rel="stylesheet" href="./styles.css" />
+  </head>
+  <body>
+    <canvas id="xr-canvas" aria-hidden="true"></canvas>
+
+    <main class="app-shell">
+      <header class="topbar">
+        <div class="brand">
+          <span class="brand-mark" aria-hidden="true">
+            <span></span>
+          </span>
+          <div>
+            <p class="eyebrow">WEBXR · LOCAL-FLOOR</p>
+            <h1>Distanzmesser</h1>
+          </div>
+        </div>
+
+        <button id="exit-ar-button" class="icon-button is-hidden" type="button" aria-label="AR beenden">
+          <svg viewBox="0 0 24 24" aria-hidden="true">
+            <path d="M6 6l12 12M18 6L6 18" />
+          </svg>
+        </button>
+      </header>
+
+      <section class="measure-panel" aria-labelledby="measurement-title">
+        <div class="panel-heading">
+          <div>
+            <p class="eyebrow" id="measurement-title">MESSUNG</p>
+            <p id="status-text" class="status-text">Bereit für AR</p>
+          </div>
+          <div id="status-badge" class="status-badge">
+            <span class="status-dot" aria-hidden="true"></span>
+            <span id="status-label">BEREIT</span>
+          </div>
+        </div>
+
+        <div class="total-readout" aria-live="polite">
+          <span class="readout-label">GESAMTDISTANZ</span>
+          <div><span id="distance-total">0.000</span><span class="unit">m</span></div>
+        </div>
+
+        <div class="axis-grid" aria-label="Distanzen nach Achse">
+          <article class="axis-card axis-x">
+            <span class="axis-label">X</span>
+            <strong id="distance-x">0.000</strong>
+            <span class="axis-unit">m</span>
+          </article>
+          <article class="axis-card axis-y">
+            <span class="axis-label">Y</span>
+            <strong id="distance-y">0.000</strong>
+            <span class="axis-unit">m</span>
+          </article>
+          <article class="axis-card axis-z">
+            <span class="axis-label">Z</span>
+            <strong id="distance-z">0.000</strong>
+            <span class="axis-unit">m</span>
+          </article>
+        </div>
+
+        <div class="controls">
+          <button id="enter-ar-button" class="primary-button" type="button" disabled>
+            <svg viewBox="0 0 24 24" aria-hidden="true">
+              <path d="M4 8V5a1 1 0 0 1 1-1h3M16 4h3a1 1 0 0 1 1 1v3M20 16v3a1 1 0 0 1-1 1h-3M8 20H5a1 1 0 0 1-1-1v-3" />
+              <circle cx="12" cy="12" r="3" />
+            </svg>
+            <span>AR starten</span>
+          </button>
+
+          <div id="measurement-controls" class="measurement-controls is-hidden">
+            <button id="start-button" class="primary-button" type="button">
+              <span class="button-dot" aria-hidden="true"></span>
+              Messung starten
+            </button>
+            <button id="stop-button" class="secondary-button" type="button" disabled>
+              <span class="button-square" aria-hidden="true"></span>
+              Stoppen
+            </button>
+          </div>
+        </div>
+
+        <p id="support-message" class="support-message">
+          AR-Verfügbarkeit wird geprüft …
+        </p>
+      </section>
+
+      <footer class="help-text">
+        <p>Startpunkt setzen, Gerät bewegen, Messung stoppen.</p>
+        <p>Die Werte zeigen die absoluten Abstände entlang der lokalen X-, Y- und Z-Achse.</p>
+      </footer>
+    </main>
+
+    <script type="module" src="./app.js"></script>
+  </body>
+</html>
